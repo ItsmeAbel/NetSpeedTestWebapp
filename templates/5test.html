@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Speed Test</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #3498db, #8e44ad);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background: #fff;
+            color: #333;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #eee;
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .results p {
+            font-size: 1.5rem;
+            margin: 10px 0;
+        }
+
+        .results table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+
+        .results th, .results td {
+            padding: 12px 15px;
+            border: 1px solid #fff;
+            text-align: center;
+        }
+
+        .results th {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        #progress-container {
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 20px;
+            background-color: #2ecc71;
+            width: 0;
+            border-radius: 10px;
+        }
+
+        .loading {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Network Speed Test</h1>
+    <button class="btn" id="testSpeedBtn">Run 5 Speed Tests</button>
+
+    <!-- Progress Bar -->
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading" id="loading">Running tests, please wait...</div>
+
+    <!-- Results -->
+    <div class="results" id="results">
+        <table>
+            <thead>
+                <tr>
+                    <th>Test #</th>
+                    <th>⬇️</th>
+                    <th>⬆️</th>
+                    <th>Lpre</th>
+                    <th>Ldur</th>
+                    <th>Laft</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody">
+                <!-- Individual test results will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('testSpeedBtn').addEventListener('click', function() {
+            let testCount = 5;
+            let progress = 0;
+
+            const progressBar = document.getElementById('progress-bar');
+            const progressContainer = document.getElementById('progress-container');
+            const loadingText = document.getElementById('loading');
+            const resultsDiv = document.getElementById('results');
+            const resultsBody = document.getElementById('resultsBody');
+            
+            // Reset progress bar and UI
+            progressBar.style.width = '0';
+            progressContainer.style.display = 'block';
+            loadingText.style.display = 'block';
+            resultsDiv.style.display = 'none';
+            resultsBody.innerHTML = '';  // Clear previous results
+
+            async function runSpeedTests() {
+                for (let i = 0; i < testCount; i++) {
+                    try {
+                        const response = await fetch('/network_test');
+                        const data = await response.json();
+                        
+                        const response2 = await fetch('/latency_test')
+                        const ping = await response2.json();
+
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                            return;
+                        }
+
+                        // Add the current test result to the table
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${i + 1}</td>
+                            <td>${data.download_speed.toFixed(2)}</td>
+                            <td>${data.upload_speed.toFixed(2)}</td>
+                            <td>${ping.lat_pre.toFixed(2)}</td>
+                            <td>${ping.lat_dur.toFixed(2)}</td>
+                            <td>${ping.lat_aft.toFixed(2)}</td>
+                            <td>${ping.Grade}</td>
+                        `;
+                        resultsBody.appendChild(row);
+
+                        // Update progress
+                        progress += 100 / testCount;
+                        progressBar.style.width = `${progress}%`;
+
+                        console.log(`Test ${i + 1} Results:`, data);
+
+                    } catch (error) {
+                        console.error('Error fetching network test results:', error);
+                    }
+                }
+
+                // Hide loading and show results
+                loadingText.style.display = 'none';
+                resultsDiv.style.display = 'block';
+            }
+
+            // Run the speed tests 5 times
+            runSpeedTests();
+        });
+    </script>
+
+</body>
+</html>
