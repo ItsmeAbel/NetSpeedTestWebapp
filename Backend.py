@@ -7,6 +7,7 @@ import numpy as np
 from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
+
 interval = 5
 lat_pre = 0
 lat_dur = 0
@@ -69,6 +70,10 @@ def lat_calc():
     time.sleep(interval)
     lat_aft = ping_latency()
 
+    if lat_dur is None or lat_pre is None:
+        lat_dur = lat_dur or 0
+        lat_pre = lat_pre or 0
+    
     bufferbloat = lat_dur - lat_pre
 
     if bufferbloat <= 5:
