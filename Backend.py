@@ -114,5 +114,5 @@ def latency_test():
 if __name__ == 'main':
     print("Starting the Flask server...")
     # Get the port from the environment variable or default to 5000
-    port = int(os.getenv('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    # port = int(os.getenv('PORT', 5000))
+    # app.run(host='0.0.0.0', port=port, debug=True)
