@@ -91,25 +91,6 @@ def lat_calc():
         'Grade': Grade
     }
 
-# def buffer_calc():
-#     bufferbloat = lat_dur - lat_pre
-#     if bufferbloat <= 5:
-#         Grade = 'S'
-#     elif bufferbloat <= 30:
-#         Grade = 'A'
-#     elif bufferbloat <= 60:
-#         Grade = 'B'
-#     elif bufferbloat <= 200:
-#         Grade = 'C'
-#     elif bufferbloat <= 400:
-#         Grade = 'D'
-#     elif bufferbloat > 400:
-#         Grade = 'F'
-
-#     return {
-#         'Grade': Grade
-#     }
-
 @app.route('/')
 def home():
     return render_template('5test.html')
@@ -128,13 +109,10 @@ def latency_test():
     ping = lat_calc()
     return jsonify(ping)
 
-# #measuring bufferbloat
-# @app.route('/buffer_test', methods=['GET'])
-# def buffer_test():
-#     bb = buffer_calc()
-#     return jsonify(bb)
     
 
 if __name__ == 'main':
     print("Starting the Flask server...")
-    app.run(debug=True)
+    # Get the port from the environment variable or default to 5000
+    port = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
