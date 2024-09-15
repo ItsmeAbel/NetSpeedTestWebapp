@@ -70,9 +70,10 @@ def lat_calc():
     time.sleep(interval)
     lat_aft = ping_latency()
 
-    if lat_dur is None or lat_pre is None:
+    if lat_dur is None or lat_pre is None or lat_aft is None:
         lat_dur = lat_dur or 0
         lat_pre = lat_pre or 0
+        lat_aft = lat_aft or 0
     
     bufferbloat = lat_dur - lat_pre
 
