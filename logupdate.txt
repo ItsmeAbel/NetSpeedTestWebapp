@@ -1,7 +1,7 @@
 succesfully hosted the webapp on Render.com. But performance is low given that it's free hosting
 Migrated the project to Microsoft Azure instead. Azure provides 12 monthes of free hosting so going to utilize that for now.
 Everything besides latency measurment works. Link to site
-Render: https://testyspeedy.onrender.com/ (Down due to azure migration)
+Render: https://testyspeedy.onrender.com/ (Might be Down due to azure migration)
 Azure: https://speedytesty-hsffeydmarbva3gx.westeurope-01.azurewebsites.net/
 
 The webapp however is incomplete due to the fact that net measurment works differently when it is being hosted from a non-local host.
